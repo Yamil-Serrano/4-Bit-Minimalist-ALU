@@ -1,9 +1,13 @@
-# 4-Bit Minimalist ALU
+# 4-Bit Designs ALU
 
-A **hardware-minimalist 4-bit Arithmetic Logic Unit** built with discrete logic gates, implementing only three fundamental operations to demonstrate **NAND-universality** principles. This ALU showcases how complex computations can be built from simple components, following the philosophy of hardware/software trade-offs in computer architecture.
+A collection of 4-bit ALU designs exploring contrasting architectural philosophies, from a minimalist NAND‑universal implementation to a more advanced carry‑lookahead architecture. The first design is a hardware‑minimalist ALU, built entirely with discrete ICs, real wiring, and breadboards. It demonstrates how complete arithmetic and logic behavior can emerge from simple components using NAND universality and ripple‑carry techniques. The second design is a more complete and high‑performance ALU, featuring carry‑lookahead logic (CLA) and additional dedicated logic blocks.
 
-This was the **original hand-wired model**, built entirely using real ICs, wires, and breadboards.  
-Below is the full documentation of this minimalist ALU — and at the end, you’ll find a section showcasing the **Advanced Carry-Lookahead ALU** based on the same project. 
+# Hardware-Minimalist 4-bit ALU (Ripple-Carry Architecture)
+This ALU represents the most fundamental version of the project: a design built entirely from discrete logic ICs, assembled by hand using breadboards, wiring, and basic digital components. The core idea is to show how a complete arithmetic and logic system can emerge from a minimal set of building blocks, following the principles of NAND universality and simple ripple-carry computation.
+
+At its heart, this design implements a 4-bit ripple-carry adder, where each bit calculates its sum and pass its carry to the next stage. While not the fastest architecture, its transparency makes it highly educational: every step of the computation from XOR-based addition to AND-driven carry generation is physically observable in the circuit.
+
+Beyond addition and subtraction, the ALU includes a NAND-based logic path to highlight how a single universal gate can serve as the foundation for more complex operations. The result is a compact but fully functional ALU that exemplifies hardware minimalism, discrete logic design, and hands-on digital engineering.
 
 ## Technical Specifications
 
