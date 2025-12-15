@@ -1,4 +1,4 @@
-# 4-Bit Designs ALU
+# 4-Bit ALU Designs
 
 A collection of 4-bit ALU designs exploring contrasting architectural philosophies, from a minimalist NAND‑universal implementation to a more advanced carry‑lookahead architecture. The first design is a hardware‑minimalist ALU, built entirely with discrete ICs, real wiring, and breadboards. It demonstrates how complete arithmetic and logic behavior can emerge from simple components using NAND universality and ripple‑carry techniques. The second design is a more complete and high‑performance ALU, featuring carry‑lookahead logic (CLA) and additional dedicated logic blocks.
 
@@ -37,7 +37,7 @@ Beyond addition and subtraction, the ALU includes a NAND-based logic path to hig
 ## Hardware Implementation
 
 ### Circuit Design
-<img width="3931" height="2961" alt="Main" src="https://github.com/user-attachments/assets/ea0fbe19-0d4a-4a48-999b-51e0936f0cec" />
+<img width="4140" height="3090" alt="Main" src="https://github.com/user-attachments/assets/b60e6d25-3f0f-4892-bed9-4a970c2f09d8" />
 *Complete circuit schematic designed in CircuitVerse*
 
 ## Operation Details
