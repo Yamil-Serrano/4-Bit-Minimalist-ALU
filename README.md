@@ -189,3 +189,11 @@ This implementation highlights the practical differences between two hardware pa
 | **Debugging** | Direct probing of every net with a multimeter. | Indirect, relying on synthesis reports and output observation. |
 | **Core Experience** | Understanding gate-level data flow and propagation delay. | Learning the FPGA toolchain and HDL design patterns. |
 
+## License
+Licensed under the **Solderpad Hardware License v2.1**.  
+See the [LICENSE](LICENSE) file for full terms.
+
+## Contact
+If you have any questions or suggestions, feel free to reach out:
+- **GitHub:** [Neowizen](https://github.com/Yamil-Serrano)
+
