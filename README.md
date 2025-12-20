@@ -157,10 +157,35 @@ The new Architecture also adds three independent logic blocks:
 - **NOR**  
 - **XNOR**  
 
-Each implemented with its own dedicated combinational network, separate from the CLA path — similar to real CPU ALU designs.
 
-### FPGA-Oriented Implementation
-While it is *possible* to build this version with discrete chips, it would require a large number of ICs, making it better suited for FPGA synthesis.  
-This "Advanced ALU" will be implemented once the FPGA board arrives :3
+# FPGA Implementation: Tang Nano 9K
+This module ports the 4-bit ALU logic from discrete integrated circuits to a programmable Gowin GW1NR-LV9 FPGA on the Sipeed Tang Nano 9K board. This transformation demonstrates a key modern digital design workflow: translating a proven hardware concept into a compact, single-chip solution using Hardware Description Language (HDL). The implementation faithfully replicates the behavior of the original breadboard circuit, providing a direct comparison between discrete and programmable logic.
 
----
+## Physical Prototype & Interfacing
+The FPGA interacts with the physical world through a simple, hands-on interface built on a breadboard. This setup mirrors the experience of the discrete version while showcasing the FPGA's role as a universal logic device.
+
+**Input (Switches):**
+A robust pull-down configuration is used for all input pins. The circuit guarantees a definite logic high (1) when the switch is pressed and a solid logic low (0) when released, eliminating floating states.
+
+**Output (LEDs):**
+Output pins drive LEDs in a standard active-high configuration. An illuminated LED represents a logic high (`1`).
+
+![20251219_232145 1](https://github.com/user-attachments/assets/a3ac4201-116e-4470-bcaf-a03b19d723fd)
+*Tang Nano 9K with input switches and output LEDs.*
+
+## Design Philosophy & Notes
+- **Architectural Fidelity**: The HDL description was structured to mirror the original ripple-carry data path, providing a clear one-to-one conceptual mapping between the discrete gate-level design and its HDL counterpart.
+- **Resource Efficiency**: The entire system utilizes a very small fraction of the FPGA's available logic cells, demonstrating how a functional digital system can be miniaturized onto modern programmable logic.
+- **Practical Focus**: The primary goal was a correct and understandable translation to HDL rather than performance optimization, maintaining the project's core educational value.
+
+## Comparative Summary: Discrete vs. FPGA
+This implementation highlights the practical differences between two hardware paradigms.
+
+| Aspect | Discrete IC Implementation | FPGA Implementation |
+| :--- | :--- | :--- |
+| **Component Count** | 9 ICs, extensive wiring. | **1** primary chip. |
+| **Design Method** | Wiring logic gates on a breadboard. | Writing and synthesizing HDL code. |
+| **Flexibility** | Fixed; changes require physical rewiring. | **Reconfigurable** via code upload. |
+| **Debugging** | Direct probing of every net with a multimeter. | Indirect, relying on synthesis reports and output observation. |
+| **Core Experience** | Understanding gate-level data flow and propagation delay. | Learning the FPGA toolchain and HDL design patterns. |
+
