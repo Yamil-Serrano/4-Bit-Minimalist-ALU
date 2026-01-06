@@ -37,7 +37,7 @@ Beyond addition and subtraction, the ALU includes a NAND-based logic path to hig
 ## Hardware Implementation
 
 ### Circuit Design
-<img width="4140" height="3090" alt="Main" src="https://github.com/user-attachments/assets/b60e6d25-3f0f-4892-bed9-4a970c2f09d8" />
+<img width="6550" height="3704" alt="Main" src="https://github.com/user-attachments/assets/3b2c3d04-0615-461c-9db2-b9047fb1835c" />
 *Complete circuit schematic designed in CircuitVerse*
 
 ## Operation Details
@@ -125,11 +125,91 @@ This project demonstrates fundamental computer architecture concepts:
 3. **No Overflow Flag**: Signed overflow detection not implemented
 4. **Manual Testing**: Requires external input/output devices
 
+# Hardware-Minimalist 4-bit ALU (Modified 3-bit OP Code)
+
+This updated version of the 4-bit minimalistic ALU introduces expanded operation selection while maintaining a fully discrete IC implementation. By replacing the 74HC157 with two 74HC153 multiplexers, the ALU can now handle five distinct operations controlled by a 3-bit operation code.
+
+### Core Features
+
+* **Data Width**: 4-bit parallel processing
+* **Operations**:
+
+  * `X00` - Bitwise NOR (A NOR B)
+  * `X01` - Bitwise XOR (A XOR B)
+  * `X10` - Bitwise NAND (A NAND B)
+  * `011` - Arithmetic Addition (A + B)
+  * `111` - Arithmetic Subtraction (A - B) using two's complement
+* **Control Input**: 3-bit operation code
+* **Output Flags**:
+
+  * **Carry Out** - For arithmetic overflow detection
+  * **Zero Flag** - Indicates when result equals 0000
+
+### Integrated Circuits Used
+
+| IC          | Function                   | Quantity | Purpose                                        |
+| ----------- | -------------------------- | -------- | ---------------------------------------------- |
+| **74HC86**  | Quad XOR Gate              | 5        | Full adder, two's complement, XOR operation    |
+| **74HC08**  | Quad AND Gate              | 2        | Carry generation for arithmetic operations     |
+| **74HC00**  | Quad NAND Gate             | 1        | NAND operation and control logic               |
+| **74HC153** | Dual 4-input Multiplexer   | 2        | Selection between arithmetic and logic outputs |
+| **74HC02**  | Quad NOR Gate              | 1        | NOR operation for logic path                   |
+| **CD4000**  | 2x 3-input NOR + NOT gates | 1        | Zero flag detection logic                      |
+
+**Total Components**: 12 ICs, implementing a complete 4-bit ALU with expanded functionality
+
+## Hardware Implementation
+
+### Circuit Design
+<img width="8942" height="5014" alt="Main_1" src="https://github.com/user-attachments/assets/80c4a54d-9e38-48e8-8925-d6c866f5045a" />
+*Complete circuit schematic designed in CircuitVerse*
+
+### Operation Details
+
+#### 1. **Arithmetic Addition (011)**
+
+* Implements 4-bit ripple-carry adder
+* Uses XOR gates for sum, AND gates for carry
+* Direct A + B computation
+
+#### 2. **Arithmetic Subtraction (111)**
+
+* Utilizes two's complement method
+* Inverts B using XOR gates and adds 1 via carry-in
+* Result: A + (~B + 1) = A - B
+
+#### 3. **Bitwise NAND (X10)**
+
+* Direct NAND gate implementation
+
+#### 4. **Bitwise XOR (X01)**
+
+* Uses additional 74HC86 to implement XOR logic
+
+#### 5. **Bitwise NOR (X00)**
+
+* Uses 74HC02 to implement NOR logic
+
+### Flag Generation
+
+* **Zero Flag**: Implemented using NOR logic reduction via CD4000
+* **Carry Flag**: Generated from the 4th full adder's carry-out for arithmetic operations
+
+### Truth Table Examples
+
+| A (bin) | B (bin) | Op         | Result | Carry | Zero |
+| ------- | ------- | ---------- | ------ | ----- | ---- |
+| 0101    | 0011    | 011 (Add)  | 1000   | 0     | 0    |
+| 0111    | 0010    | 111 (Sub)  | 0101   | 1     | 0    |
+| 1111    | 1111    | X10 (NAND) | 0000   | X     | 1    |
+| 1010    | 0101    | X01 (XOR)  | 1111   | X     | 0    |
+| 1100    | 1010    | X00 (NOR)  | 0010   | X     | 0    |
+
+
 # Advanced 4-Bit ALU (Carry-Lookahead Architecture)
 
 After the hand-wired model, a second version was engineered using **Carry-Lookahead Logic (CLA)** to dramatically reduce propagation delay. In a ripple-carry adder, each bit must wait for the previous carry — limiting speed. 
-
-<img width="7577" height="4865" alt="Main" src="https://github.com/user-attachments/assets/e9e5bc63-5055-4dbc-ac76-90e643e89c14" />
+<img width="8636" height="4843" alt="Main_2" src="https://github.com/user-attachments/assets/d36d8623-fe9f-4c03-9394-7ff118d79f1b" />
 *Complete circuit schematic designed in CircuitVerse*
 
 ## Technical Specifications
