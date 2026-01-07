@@ -24,20 +24,24 @@ Beyond addition and subtraction, the ALU includes a NAND-based logic path to hig
 - **Design Philosophy**: Hardware minimalism via NAND universality
 
 ## Integrated Circuits Used
-| IC | Function | Quantity | Purpose |
-|----|----------|----------|---------|
-| **74HC86** | Quad XOR Gate | 4 | Full adder implementation and two's complement |
-| **74HC08** | Quad AND Gate | 2 | Carry generation for arithmetic operations |
-| **74HC00** | Quad NAND Gate | 1 | NAND operation and control logic |
-| **74HC157** | 2:1 Multiplexer | 1 | Operation selection and output routing |
-| **CD4000** | 2x 3-input NOR + NOT gates | 1 | Zero flag detection logic |
+| IC          | Function        | Quantity | Purpose                                        |
+| ----------- | --------------- | -------- | ---------------------------------------------- |
+| **74HC86**  | Quad XOR Gate   | 4        | Full adder implementation and two's complement |
+| **74HC08**  | Quad AND Gate   | 2        | Carry generation for arithmetic operations     |
+| **74HC00**  | Quad NAND Gate  | 1        | NAND operation and control logic               |
+| **74HC157** | 2:1 Multiplexer | 1        | Operation selection and output routing         |
+| **74HC32**  | Quad OR Gate    | 1        | Zero detection reduction OR tree               |
+| **74HC04**  | Hex Inverter    | 1        | Final inversion for zero flag output           |
 
-**Total Components**: 9 ICs, implementing a complete 4-bit ALU
+**Replacement Note:** The previous **CD4000** device used for zero detection has been removed. Zero detection is now implemented exclusively with **74HC32 (OR)** and **74HC04 (NOT)** to keep the design within a single 74HC logic family and improve timing consistency.
+This removes the need for mixed-family CMOS (CD4000), ensures consistent propagation delay characteristics, and simplifies power-supply considerations.
+
+**Total Components:** 10 ICs implementing a complete 4-bit ALU
 
 ## Hardware Implementation
 
 ### Circuit Design
-<img width="6550" height="3704" alt="Main" src="https://github.com/user-attachments/assets/3b2c3d04-0615-461c-9db2-b9047fb1835c" />
+<img width="5345" height="3004" alt="Main" src="https://github.com/user-attachments/assets/e6159089-0861-4735-bc9e-3329ad1724f8" />
 *Complete circuit schematic designed in CircuitVerse*
 
 ## Operation Details
@@ -61,8 +65,7 @@ Beyond addition and subtraction, the ALU includes a NAND-based logic path to hig
 ### Flag Generation
 
 #### **Zero Flag**
-- Implemented using NOR logic reduction via CD4000
-- Detects when all 4 result bits are 0
+- Implemented using **74HC32 + 74HC04 Zero Detection Unit**
 - Output: HIGH when result = 0000
 
 #### **Carry Flag**
@@ -89,28 +92,29 @@ This project demonstrates fundamental computer architecture concepts:
 5. **Ripple-Carry Design**: Basic but functional adder architecture
 
 ### Breadboard Implementation
-![Breadboard](https://github.com/user-attachments/assets/11e9838c-7574-48a2-95e6-e5d097de726d)
-*Close-up of the wired implementation*
+![20260106_205412 1](https://github.com/user-attachments/assets/7ed2b303-a01f-4e95-85a2-b13a74bab634)
+*Close-up of the wired implementation — organized chaos, I promise :3*
 
 ## Building Your Own
 
 ### Components List
 
-| Quantity | Component | Specification | Use in ALU |
-|----------|-----------|---------------|------------|
-| 4        | 74HC86    | Quad XOR Gate | Full adder and two's complement |
-| 2        | 74HC08    | Quad AND Gate | Carry generation for arithmetic operations |
-| 1        | 74HC00    | Quad NAND Gate | NAND operation and control logic |
-| 1        | 74HC157   | 4-bit 2:1 Multiplexer | Operation selection |
-| 1        | CD4000    | 2x 3-input NOR + NOT gates | Zero flag detection |
-| 8        | LEDs      | Yellow, 5mm | Input bits (A and B, 4 each) |
-| 4        | LEDs      | Red, 5mm | ALU result (4-bit output) |
-| 1        | LED       | Green, 5mm | Zero flag indicator |
-| 2        | LEDs      | Blue, 5mm | Operation code indicators |
-| 11       | Resistors | 330Ω, 1/4W | Current limiting for LEDs |
-| 2        | Breadboards | 830+ points | Circuit prototyping |
-| 50+      | Jumper wires | Various colors | Circuit connections |
-| 1        | Power supply | 5V DC, 1A minimum | Circuit power supply |
+| Quantity | Component       | Specification         | Use in ALU                                 |
+| -------- | --------------- | --------------------- | ------------------------------------------ |
+| 4        | 74HC86          | Quad XOR Gate         | Full adder and two's complement            |
+| 2        | 74HC08          | Quad AND Gate         | Carry generation for arithmetic operations |
+| 1        | 74HC00          | Quad NAND Gate        | NAND operation and control logic           |
+| 1        | 74HC157         | 4-bit 2:1 Multiplexer | Operation selection                        |
+| 1        | 74HC32          | Quad OR Gate          | Zero detection OR tree                     |
+| 1        | 74HC04          | Hex Inverter          | Final inversion stage for zero flag        |
+| 2        | DIP-4P Switches | 4-position DIP switch | Nibble inputs: A (4 bits) and B (4 bits)   |
+| 1        | DIP-2P Switch   | 2-position DIP switch | Operation code selection (OP code)         |
+| 8        | LEDs            | Yellow, 5mm           | ALU Output                                 |
+| 1        | LED             | Green, 5mm            | Zero flag indicator                        |
+| 10       | Resistors       | 330Ω, 1/4W            | Pull down resistors for the DIP switches   |
+| 2        | Breadboards     | 830+ points           | Circuit prototyping                        |
+| 50+      | Jumper wires    | Various colors        | Circuit connections                        |
+| 1        | Power supply    | 5V DC, 1A minimum     | Circuit power supply                       |
 
 ### Construction Tips
 1. Start with power distribution (VCC and GND rails)
@@ -154,14 +158,15 @@ This updated version of the 4-bit minimalistic ALU introduces expanded operation
 | **74HC00**  | Quad NAND Gate             | 1        | NAND operation and control logic               |
 | **74HC153** | Dual 4-input Multiplexer   | 2        | Selection between arithmetic and logic outputs |
 | **74HC02**  | Quad NOR Gate              | 1        | NOR operation for logic path                   |
-| **CD4000**  | 2x 3-input NOR + NOT gates | 1        | Zero flag detection logic                      |
+| **74HC32**  | Quad OR Gate               | 1        | Zero detection OR tree                         |
+| **74HC04**  | Hex Inverter               | 1        | Final inversion stage for zero flag            |
 
-**Total Components**: 12 ICs, implementing a complete 4-bit ALU with expanded functionality
+**Total Components**: 13 ICs, implementing a complete 4-bit ALU with expanded functionality
 
 ## Hardware Implementation
 
 ### Circuit Design
-<img width="8942" height="5014" alt="Main_1" src="https://github.com/user-attachments/assets/80c4a54d-9e38-48e8-8925-d6c866f5045a" />
+<img width="8929" height="5014" alt="Main_1" src="https://github.com/user-attachments/assets/2d8331d5-3e17-4641-bf6d-106b082e6290" />
 *Complete circuit schematic designed in CircuitVerse*
 
 ### Operation Details
@@ -192,7 +197,7 @@ This updated version of the 4-bit minimalistic ALU introduces expanded operation
 
 ### Flag Generation
 
-* **Zero Flag**: Implemented using NOR logic reduction via CD4000
+* **Zero Flag**: Implemented using **74HC32 + 74HC04 Zero Detection Unit**
 * **Carry Flag**: Generated from the 4th full adder's carry-out for arithmetic operations
 
 ### Truth Table Examples
@@ -263,7 +268,7 @@ This implementation highlights the practical differences between two hardware pa
 
 | Aspect | Discrete IC Implementation | FPGA Implementation |
 | :--- | :--- | :--- |
-| **Component Count** | 9 ICs, extensive wiring. | **1** primary chip. |
+| **Component Count** | 10 to 13 ICs, extensive wiring. | **1** primary chip. |
 | **Design Method** | Wiring logic gates on a breadboard. | Writing and synthesizing HDL code. |
 | **Flexibility** | Fixed; changes require physical rewiring. | **Reconfigurable** via code upload. |
 | **Debugging** | Direct probing of every net with a multimeter. | Indirect, relying on synthesis reports and output observation. |
@@ -276,4 +281,3 @@ See the [LICENSE](LICENSE-HARDWARE) file for full terms.
 ## Contact
 If you have any questions or suggestions, feel free to reach out:
 - **GitHub:** [Neowizen](https://github.com/Yamil-Serrano)
-
