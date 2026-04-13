@@ -206,7 +206,7 @@ This updated version of the 4-bit minimalistic ALU introduces expanded operation
 | 0111    | 0010    | 111 (Sub)  | 0101   | 1     | 0    |
 | 1111    | 1111    | X10 (NAND) | 0000   | X     | 1    |
 | 1010    | 0101    | X01 (XOR)  | 1111   | X     | 0    |
-| 1100    | 1010    | X00 (NOR)  | 0010   | X     | 0    |
+| 1100    | 1010    | X00 (NOR)  | 0001   | X     | 0    |
 
 
 # Advanced 4-Bit ALU (Carry-Lookahead Architecture)
