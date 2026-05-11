@@ -136,16 +136,16 @@ This updated version of the 4-bit minimalistic ALU introduces expanded operation
 * **Data Width**: 4-bit parallel processing
 * **Operations**:
 
-  * `X00` - Bitwise NOR (A NOR B)
-  * `X01` - Bitwise XOR (A XOR B)
-  * `X10` - Bitwise NAND (A NAND B)
-  * `011` - Arithmetic Addition (A + B)
-  * `111` - Arithmetic Subtraction (A - B) using two's complement
+  * `000` - Arithmetic Addition (A + B)
+  * `100` - Arithmetic Subtraction (A - B) using two's complement
+  * `X01` - Bitwise NAND (A NAND B)
+  * `X10` - Bitwise XOR (A XOR B)
+  * `X11` - Bitwise NOR (A NOR B)
 * **Control Input**: 3-bit operation code
 * **Output Flags**:
 
-  * **Carry Out** - For arithmetic overflow detection
-  * **Zero Flag** - Indicates when result equals 0000
+  * **Equal Flag** - Indicates when A equals B
+  * **Zero Flag** - Indicates when ALU result equals 0000
 
 ### Integrated Circuits Used
 
@@ -156,7 +156,7 @@ This updated version of the 4-bit minimalistic ALU introduces expanded operation
 | **74HC00**  | Quad NAND Gate             | 1        | NAND operation                                 |
 | **74HC153** | Dual 4-input Multiplexer   | 2        | Selection between arithmetic and logic outputs |
 | **74HC02**  | Quad NOR Gate              | 1        | NOR operation                                  |
-| **74HC4002**| Dual 4-Input NOR Gate      | 1        | Zero detection                                 |
+| **74HC4002**| Dual 4-Input NOR Gate      | 1        | Zero and Equality detection                    |
 
 
 **Total Components**: 12 ICs, implementing a complete 4-bit ALU with expanded functionality
@@ -164,49 +164,49 @@ This updated version of the 4-bit minimalistic ALU introduces expanded operation
 ## Hardware Implementation
 
 ### Circuit Design
-<img width="9201" height="5163" alt="Main_1" src="https://github.com/user-attachments/assets/f700a608-c322-4b8a-8177-0494a9f16111" />
+<img width="10443" height="5057" alt="Main_1" src="https://github.com/user-attachments/assets/5832b244-c8ce-4b34-b6e5-f0c41465cb93" />
 *Complete circuit schematic designed in CircuitVerse*
 
 ### Operation Details
 
-#### 1. **Arithmetic Addition (011)**
+#### 1. **Arithmetic Addition (000)**
 
 * Implements 4-bit ripple-carry adder
 * Uses XOR gates for sum, AND gates for carry
 * Direct A + B computation
 
-#### 2. **Arithmetic Subtraction (111)**
+#### 2. **Arithmetic Subtraction (100)**
 
 * Utilizes two's complement method
 * Inverts B using XOR gates and adds 1 via carry-in
 * Result: A + (~B + 1) = A - B
 
-#### 3. **Bitwise NAND (X10)**
+#### 3. **Bitwise NAND (X01)**
 
-* Direct NAND gate implementation
+* Uses 74HC00 to implement NAND logic
 
-#### 4. **Bitwise XOR (X01)**
+#### 4. **Bitwise XOR (X10)**
 
 * Uses additional 74HC86 to implement XOR logic
 
-#### 5. **Bitwise NOR (X00)**
+#### 5. **Bitwise NOR (X11)**
 
 * Uses 74HC02 to implement NOR logic
 
-### Flag Generation
+### Flag Generation (Implemented using **74HC4002**)
 
-* **Zero Flag**: Implemented using **74HC4002 Zero Detection Unit**
-* **Carry Flag**: Generated from the 4th full adder's carry-out for arithmetic operations
+* **Zero Flag**: HIGH when ALU output is 0000
+* **Equal Flag**: HIGH when A si equal to B
 
 ### Truth Table Examples
 
-| A (bin) | B (bin) | Op         | Result | Carry | Zero |
-| ------- | ------- | ---------- | ------ | ----- | ---- |
-| 0101    | 0011    | 011 (Add)  | 1000   | 0     | 0    |
-| 0111    | 0010    | 111 (Sub)  | 0101   | 1     | 0    |
-| 1111    | 1111    | X10 (NAND) | 0000   | X     | 1    |
-| 1010    | 0101    | X01 (XOR)  | 1111   | X     | 0    |
-| 1100    | 1010    | X00 (NOR)  | 0001   | X     | 0    |
+| A (bin) | B (bin) | Op         | Result | Zero | Equal |
+| ------- | ------- | ---------- | ------ | ---- | ----- |
+| 0101    | 0011    | 000 (Add)  | 1000   | 0    | 0     |
+| 0111    | 0010    | 100 (Sub)  | 0101   | 0    | 0     |
+| 1111    | 1111    | X01 (NAND) | 0000   | 1    | 1     |
+| 1010    | 0101    | X10 (XOR)  | 1111   | 0    | 0     |
+| 1100    | 1010    | X11 (NOR)  | 0001   | 0    | 0     |
 
 
 # Advanced 4-Bit ALU (Carry-Lookahead Architecture)
